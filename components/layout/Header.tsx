@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { Bell, Search } from "lucide-react";
-import { useFinanceStore } from "@/store/useFinanceStore";
+import { useDisplayName } from "@/context/AuthContext";
 
 const pageTitles: Record<string, { title: string; subtitle: string }> = {
   "/": { title: "Dashboard", subtitle: "Your financial overview" },
@@ -16,11 +16,12 @@ const pageTitles: Record<string, { title: string; subtitle: string }> = {
 
 export default function Header() {
   const pathname = usePathname();
-  const { userName } = useFinanceStore();
+  const displayName = useDisplayName();
 
   if (pathname === "/login" || pathname === "/login/") return null;
 
-  const page = pageTitles[pathname] || { title: "WealthFlow", subtitle: "" };
+  const clean = pathname.replace(/\/$/, "") || "/";
+  const page = pageTitles[clean] || { title: "WealthFlow", subtitle: "" };
 
   return (
     <header className="flex items-center justify-between px-6 py-4"
@@ -40,7 +41,7 @@ export default function Header() {
           <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-indigo-500" />
         </button>
         <div className="text-sm text-slate-400 hidden md:block">
-          Hello, <span className="text-slate-200 font-medium">{userName || "User"}</span>
+          Hello, <span className="text-slate-200 font-medium">{displayName}</span>
         </div>
       </div>
     </header>

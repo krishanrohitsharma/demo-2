@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useFinanceStore } from "@/store/useFinanceStore";
+import { useAuth, useDisplayName, useUserEmail } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import {
   User,
@@ -81,7 +81,9 @@ function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) =>
 }
 
 export default function SettingsPage() {
-  const { userName, userEmail, logout } = useFinanceStore();
+  const { logout } = useAuth();
+  const userName = useDisplayName();
+  const userEmail = useUserEmail();
   const router = useRouter();
   const [notifications, setNotifications] = useState({
     billReminders: true,
@@ -91,8 +93,8 @@ export default function SettingsPage() {
   });
   const [saved, setSaved] = useState(false);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.replace("/login");
   };
 
