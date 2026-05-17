@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useFinanceStore } from "@/store/useFinanceStore";
 import { Zap } from "lucide-react";
+import { useFinanceStore } from "@/store/useFinanceStore";
+import Sidebar from "./Sidebar";
+import Header from "./Header";
 
-export default function AuthGuard({ children }: { children: React.ReactNode }) {
+export default function AppShell({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useFinanceStore();
   const pathname = usePathname();
   const router = useRouter();
@@ -25,7 +27,6 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }
   }, [isAuthenticated, pathname, router, mounted]);
 
-  // Show nothing until client hydration is complete to avoid mismatch
   if (!mounted) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: "#0a0a0f" }}>
@@ -40,7 +41,23 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!isAuthenticated && pathname !== "/login") return null;
+  const isLoginPage = pathname === "/login";
 
-  return <>{children}</>;
+  if (!isAuthenticated && !isLoginPage) return null;
+
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
+
+  return (
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+      <div className="flex-1 flex flex-col overflow-hidden" style={{ marginLeft: 240 }}>
+        <Header />
+        <main className="flex-1 overflow-y-auto p-6">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
 }
