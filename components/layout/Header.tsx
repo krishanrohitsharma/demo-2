@@ -18,7 +18,7 @@ export default function Header() {
   const pathname = usePathname();
   const { userName } = useFinanceStore();
 
-  if (pathname === "/login") return null;
+  if (pathname === "/login" || pathname === "/login/") return null;
 
   const page = pageTitles[pathname] || { title: "WealthFlow", subtitle: "" };
 

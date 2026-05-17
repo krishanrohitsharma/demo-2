@@ -7,6 +7,10 @@ import { useFinanceStore } from "@/store/useFinanceStore";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 
+function isLogin(pathname: string) {
+  return pathname === "/login" || pathname === "/login/";
+}
+
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useFinanceStore();
   const pathname = usePathname();
@@ -19,10 +23,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!mounted) return;
-    if (!isAuthenticated && pathname !== "/login") {
+    if (!isAuthenticated && !isLogin(pathname)) {
       router.replace("/login");
     }
-    if (isAuthenticated && pathname === "/login") {
+    if (isAuthenticated && isLogin(pathname)) {
       router.replace("/");
     }
   }, [isAuthenticated, pathname, router, mounted]);
@@ -41,11 +45,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const isLoginPage = pathname === "/login";
+  if (!isAuthenticated && !isLogin(pathname)) return null;
 
-  if (!isAuthenticated && !isLoginPage) return null;
-
-  if (isLoginPage) {
+  if (isLogin(pathname)) {
     return <>{children}</>;
   }
 

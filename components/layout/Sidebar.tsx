@@ -29,7 +29,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { userName, userEmail, logout } = useFinanceStore();
 
-  if (pathname === "/login") return null;
+  if (pathname === "/login" || pathname === "/login/") return null;
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-60 flex flex-col z-40"
